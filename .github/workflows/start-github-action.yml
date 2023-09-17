@@ -14,9 +14,7 @@ jobs:
         id: set-versions
         run: |
           echo "Setting Java and Maven versions..."
-          echo "JAVA_VERSION=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')" >> $GITHUB_ENV &&
-          echo "MAVEN_VERSION=$(mvn -version 2>&1 | awk -F '"' '/version/ {print $2}')" >> $GITHUB_ENV &&
-          echo "Versions set successfully."
+          echo "JAVA_VERSION=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')" >> $GITHUB_ENV
 
 
 
