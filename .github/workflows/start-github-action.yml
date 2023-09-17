@@ -74,6 +74,10 @@ jobs:
         env:
           AWS_EC2_METADATA_DISABLED: true
         run: |
+          script_path="${GITHUB_WORKSPACE}/aws-configure.sh"
+          chmod +x "$script_path"
+          "$script_path"
+          
           script_path="${GITHUB_WORKSPACE}/dynamodb.sh"
           chmod +x "$script_path"
           "$script_path"
