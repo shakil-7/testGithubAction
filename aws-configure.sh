@@ -1,8 +1,8 @@
 #!/bin/bash
 
 mkdir -p ~/.aws
-sudo touch ~/.aws/credentials
-sudo touch  ~/.aws/config
+touch ~/.aws/credentials
+touch  ~/.aws/config
 
 chmod 600 ~/.aws/credentials
 chmod 600 ~/.aws/config
