@@ -76,7 +76,7 @@ jobs:
         run: |
           which aws
           script_path="${GITHUB_WORKSPACE}/aws-configure.sh"
-          chmod +x "$script_path"
+          sudo chmod +x "$script_path"
           "$script_path"
           
           # script_path="${GITHUB_WORKSPACE}/dynamodb.sh"
