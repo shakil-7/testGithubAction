@@ -70,11 +70,11 @@ jobs:
           chmod +x "$script_path"
           "$script_path"
 
-      # - name: create a dynamodb table
-      #   run: |
-      #     script_path="${GITHUB_WORKSPACE}/dynamodb.sh"
-      #     chmod +x "$script_path"
-      #     "$script_path"
+      - name: create a dynamodb table
+        run: |
+          script_path="${GITHUB_WORKSPACE}/dynamodb.sh"
+          chmod +x "$script_path"
+          "$script_path"
 
 
     
