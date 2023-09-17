@@ -83,6 +83,13 @@ jobs:
           chmod +x "$script_path"
           "$script_path"
 
+      - name: run integration test
+        run: |
+          which aws
+          script_path="${GITHUB_WORKSPACE}/test.sh"
+          sudo chmod +x "$script_path"
+          "$script_path"
+
 
     
 
