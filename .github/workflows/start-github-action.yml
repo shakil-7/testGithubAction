@@ -56,7 +56,7 @@ jobs:
           path:  ~/.cache/aws-cli/1.22.34
           key: aws-cli/1.22.34
   
-      - name: Install Docker 20.10.21
+      - name: Install aws-cli/1.22.34
         if: steps.cached-aws-cli.outputs.cache-hit != 'true'
         run: |
           sudo apt-get install awscli
@@ -70,11 +70,11 @@ jobs:
           chmod +x "$script_path"
           "$script_path"
 
-      - name: create a dynamodb table
-        run: |
-          script_path="${GITHUB_WORKSPACE}/dynamodb.sh"
-          chmod +x "$script_path"
-          "$script_path"
+      # - name: create a dynamodb table
+      #   run: |
+      #     script_path="${GITHUB_WORKSPACE}/dynamodb.sh"
+      #     chmod +x "$script_path"
+      #     "$script_path"
 
 
     
