@@ -19,7 +19,7 @@ jobs:
         with:
           path: |
             ~/.cache/java-11
-            ~/.cache/maven
+            ~/.cache/maven1
           key: cached-data
     
       - name: Install Java-11
