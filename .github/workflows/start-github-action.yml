@@ -15,7 +15,7 @@ jobs:
           java-version: '17'
           cache: 'maven'
       - name: Build with Maven
-        run: mvn -B package -DskipTests --file test/pom.xml
+        run: mvn -B package -DskipTests --file test/pom.xml > /dev/null
         
 
       # # Install Java 11.0.20.1
