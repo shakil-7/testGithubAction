@@ -1,163 +1,36 @@
+name: NGINX Workflow
 
-name: Caching java
-
-on: push
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
         with:
-          distribution: 'temurin'
-          java-version: '11'
-          cache: 'maven'
-      - name: Build with Maven
-        run: mvn -B package -DskipTests --file test/pom.xml > /dev/null
+          path: |
+            ~/.docker
+          key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
+          restore-keys: |
+            ${{ runner.os }}-docker-
 
-      - name: Cache Docker images.
-        uses: ScribeMD/docker-cache@0.3.6
-        with:
-          key: docker-image
+      - name: Pull NGINX image
+        run: docker pull nginx:latest
 
-        
+      - name: Run NGINX container
+        run: docker run -d -p 8080:80 --name my-nginx nginx:latest
 
-      # # Install Java 11.0.20.1
-      # - uses: actions/cache@v2
-      #   id: cached-java
-      #   with:
-      #     path: ~/.cache/Java 11.0.20.1
-      #     key: Java 11.0.20.1
-    
-      # - name: Install Java-11
-      #   if: steps.cached-java.outputs.cache-hit != 'true'
-      #   run: |
-      #     sudo apt-get update -q
-      #     sudo apt-get install -y openjdk-11-jdk
-
-
-      # # INSTALL MAVEN
-      # - uses: actions/cache@v2
-      #   id: cached-maven
-      #   with:
-      #     path: ~/.cache/Apache Maven 3.6.3
-      #     key: Apache Maven 3.6.3
-      # - name: Install Apache Maven 3.6.3
-      #   if: steps.cached-maven.outputs.cache-hit != 'true'
-      #   run: |
-      #       sudo apt-get update -q
-      #       sudo apt-get install -y maven
-
-
-      # # INSTALL DOCKER
-      # - id: cached-docker
-      #   uses: actions/cache@v2
-      #   with:
-      #     path:  ~/.cache/Docker 20.10.21
-      #     key: Docker 20.10.21
-  
-      # - name: Install Docker 20.10.21
-      #   if: steps.cached-docker.outputs.cache-hit != 'true'
-      #   uses: docker-practice/actions-setup-docker@master
-
-      # INSTALL AWS_CLI
-      # - id: cached-aws-cli
-      #   uses: actions/cache@v2
-      #   with:
-      #     path:  ~/.cache/aws-cli/1.22.34
-      #     key: aws-cli/1.22.34
-  
-      # - name: Install aws-cli/1.22.34
-      #   if: steps.cached-aws-cli.outputs.cache-hit != 'true'
-      #   run: |
-      #     sudo apt-get install awscli
-
-
-  # # INSTALL AND CACHED MAVEN DEPENDENCIES
-  #     - name: Cache Maven Dependencies
-  #       id: cache-maven
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: ~/cache/.m2/repository  # Path to Maven's local repository
-  #         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-m2-
-
-  #     - name: Check for Pom File Changes
-  #       id: check-pom-changes
-  #       run: |
-  #         git fetch origin ${{ github.ref }}
-  #         files=$(git diff --name-only origin/${{ github.ref }})
-  #         changed=false
-  #         for file in $files; do
-  #           if [[ $file == *"/pom.xml" ]]; then
-  #             changed=true
-  #             break
-  #           fi
-  #         done
-  #         if $changed; then
-  #           echo "Changes detected in pom.xml files."
-  #         else
-  #           echo "No changes detected in pom.xml files."
-  #           exit 0
-  #         fi
-  #       shell: bash
-
-  #     - name: Build and Test
-  #       run: |
-  #         if [ ${{ steps.check-pom-changes.outputs.exit-code }} -ne 0 ]; then
-  #           echo "Installing dependencies due to changes in pom.xml."
-  #           ./mvnw clean install -Dmaven.repo.local=~/cache/.m2/repository
-  #         else
-  #           echo "No changes detected in pom.xml. Using cached dependencies."
-  #         fi
-  #       if: steps.cache-maven.outputs.cache-hit != 'true'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
-
-
-
-      # # RUN AWS LOCAL STACK  
-      # - name: Run aws-localstack
-      #   run: |
-      #     script_path="${GITHUB_WORKSPACE}/start.sh"
-      #     chmod +x "$script_path"
-      #     "$script_path"
-
-      # - name: create a dynamodb table
-      #   env:
-      #     AWS_EC2_METADATA_DISABLED: true
-      #   run: |
-      #     which aws
-      #     script_path="${GITHUB_WORKSPACE}/aws-configure.sh"
-      #     sudo chmod +x "$script_path"
-      #     "$script_path"
-          
-      #     script_path="${GITHUB_WORKSPACE}/dynamodb.sh"
-      #     chmod +x "$script_path"
-      #     "$script_path"
-
-      - name: run integration test
+      - name: Deploy your application (replace with your deployment steps)
         run: |
-          script_path="${GITHUB_WORKSPACE}/test.sh"
-          sudo chmod +x "$script_path"
-          "$script_path"
+          # Add your deployment steps here, e.g., copying your application files to the NGINX webroot.
 
-
-    
-
+      - name: Stop and remove NGINX container
+        run: docker stop my-nginx && docker rm my-nginx
