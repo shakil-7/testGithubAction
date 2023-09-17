@@ -28,7 +28,7 @@ jobs:
       - name: Check if Maven is already cached
         uses: actions/cache@v2
         with:
-          path: ~/cache/maven ${{ env.MAVEN_VERSION }}
+          path: ~/.cache/maven ${{ env.MAVEN_VERSION }}
           key: ${{ steps.set-cache-key.outputs.cache_key }}
 
       - name: Checking Maven Version
