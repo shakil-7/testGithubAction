@@ -15,7 +15,7 @@ jobs:
           java-version: '17'
           cache: 'maven'
       - name: Build with Maven
-        run: mvn -B "${GITHUB_WORKSPACE}/test" --file pom.xml
+        run: mvn -B package --file test/pom.xml
         
 
       # # Install Java 11.0.20.1
