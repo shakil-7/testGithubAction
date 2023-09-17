@@ -49,6 +49,18 @@ jobs:
         if: steps.cached-docker.outputs.cache-hit != 'true'
         uses: docker-practice/actions-setup-docker@master
 
+      # INSTALL AWS_CLI
+      - id: cached-aws-cli
+        uses: actions/cache@v2
+        with:
+          path:  ~/.cache/aws-cli/1.22.34
+          key: aws-cli/1.22.34
+  
+      - name: Install Docker 20.10.21
+        if: steps.cached-aws-cli.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get install awscli
+
 
 
       # RUN AWS LOCAL STACK  
