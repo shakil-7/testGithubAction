@@ -71,6 +71,8 @@ jobs:
           "$script_path"
 
       - name: create a dynamodb table
+        env:
+          AWS_EC2_METADATA_DISABLED: true
         run: |
           script_path="${GITHUB_WORKSPACE}/dynamodb.sh"
           chmod +x "$script_path"
