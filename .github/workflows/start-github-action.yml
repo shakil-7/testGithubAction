@@ -10,16 +10,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
-      - name: Set Java Version
-        id: set-java-version
-        run: echo "JAVA_VERSION=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')" >> $GITHUB_ENV
+      # - name: Set Java Version
+      #   id: set-java-version
+      #   run: echo "JAVA_VERSION=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')" >> $GITHUB_ENV
 
       - name: Check if Java-11 is already cached
         uses: actions/cache@v2
         id: cache-java
         with:
           path: ~/.cache/java-11
-          key: java ${{ env.JAVA_VERSION }}
+          key: java ${{ $(java -version 2>&1 | awk -F '"' '/version/ {print $2} }}
 
       # - name: Install Java-11
       #   if: steps.cache-java.outputs.cache-hit != 'true'
