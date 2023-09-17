@@ -15,7 +15,7 @@ jobs:
         id: cache-java
         with:
           path: ~/.cache/java-11
-          key: java $(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
+          key: java - $(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
 
       - name: Install Java-11
         if: steps.cache-java.outputs.cache-hit != 'true'
