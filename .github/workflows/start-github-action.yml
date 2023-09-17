@@ -58,24 +58,16 @@ jobs:
           path:  ~/.cache/docker
           key: docker-${{ runner.os }}
           
-      - name: Install AWS Localstack
-        if: steps.cached-aws-localstack.outputs.cache-hit != 'true'
+      - name: Install and Run aws-localstack
         run: |
-            pip install localstack awscli-local[ver1] # install LocalStack cli and awslocal
-
-
-      - name: Run / Initiate Aws Localstack
-        run: |
+          pip install localstack awscli-local[ver1]
           docker pull localstack/localstack
           script_path="${GITHUB_WORKSPACE}/start.sh"
           chmod +x start.sh
           ./start.sh
-          
-      - name: Run some Tests against LocalStack
-        run: |
-            awslocal s3 mb s3://test
-            awslocal s3 ls
-            echo "Test Execution complete!"  
+
+      - name: test
+        run: sudo docker ps
 
 
     
