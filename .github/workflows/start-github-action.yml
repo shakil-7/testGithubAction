@@ -15,9 +15,7 @@ jobs:
       - uses: actions/cache@v2
         id: cached-java
         with:
-          path: |
-            ~/.cache/java-11
-            ~/.cache/maven1
+          path: ~/.cache/Java 11.0.20.1
           key: Java 11.0.20.1
     
       - name: Install Java-11
@@ -31,13 +29,24 @@ jobs:
       - uses: actions/cache@v2
         id: cached-maven
         with:
-          path: |
-            ~/.cache/java-11
-            ~/.cache/maven1
+          path: ~/.cache/Apache Maven 3.6.3
           key: Apache Maven 3.6.3
       - name: Install Apache Maven 3.6.3
-        if: steps.cache-maven.outputs.cache-hit != 'true'
+        if: steps.cached-maven.outputs.cache-hit != 'true'
         run: |
             sudo apt-get update -q
             sudo apt-get install -y maven
+
+
+      # INSTALL DOCKER
+      # install docker
+      - id: cached-docker
+        uses: actions/cache@v2
+        with:
+          path:  ~/.cache/Docker 20.10.21
+          key: Docker 20.10.21
+  
+      - name: Install Docker 20.10.21
+        if: steps.cached-docker.outputs.cache-hit != 'true'
+        uses: docker-practice/actions-setup-docker@master
 
