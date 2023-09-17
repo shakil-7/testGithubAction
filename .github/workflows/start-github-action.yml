@@ -9,11 +9,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      
+            
       - name: Set Java Version
         run: |
-          echo "JAVA_VERSION=$(java -version 2>&1 | awk -F '\'' '\/version\/ {print \$2}')" >> $GITHUB_ENV
-          echo "MAVEN_VERSION=$(mvn -version 2>&1 | awk -F '\'' '\/version\/ {print \$2}')" >> $GITHUB_ENV
+          echo "JAVA_VERSION=$(java -version 2>&1 | awk -F '\"' '/version/ {print \$2}')" >> $GITHUB_ENV
+          echo "MAVEN_VERSION=$(mvn -version 2>&1 | awk -F '\"' '/version/ {print \$2}')" >> $GITHUB_ENV
+
 
 
       - name: Check if Java-11 is already cached
