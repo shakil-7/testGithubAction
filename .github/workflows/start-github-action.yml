@@ -9,19 +9,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: Get Java Version
-        id: java-version
-        run: |
-          java_version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
-          echo "::set-output name=java_version::$java_version"
-
+      
       - name: Check if Java-11 is already cached
         uses: actions/cache@v2
         id: cache-java
         with:
           path: ~/.cache/java-11
-          key: java-11-${{ runner.os }}-${{ steps.java-version.outputs.java_version }}
+          key: java $(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
 
       - name: Install Java-11
         if: steps.cache-java.outputs.cache-hit != 'true'
