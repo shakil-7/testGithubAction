@@ -10,10 +10,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
             
-      - name: Set Java Version
+      - name: Set Java and Maven Versions
+        id: set-versions
         run: |
-          echo "JAVA_VERSION=$(java -version 2>&1 | awk -F '\"' '/version/ {print \$2}')" >> $GITHUB_ENV &&
-          echo "MAVEN_VERSION=$(mvn -version 2>&1 | awk -F '\"' '/version/ {print \$2}')" >> $GITHUB_ENV
+          echo "Setting Java and Maven versions..."
+          echo "JAVA_VERSION=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')" >> $GITHUB_ENV &&
+          echo "MAVEN_VERSION=$(mvn -version 2>&1 | awk -F '"' '/version/ {print $2}')" >> $GITHUB_ENV &&
+          echo "Versions set successfully."
+
 
 
 
