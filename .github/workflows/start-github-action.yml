@@ -62,10 +62,11 @@ jobs:
         if: steps.cached-aws-localstack.outputs.cache-hit != 'true'
         run: |
             pip install localstack awscli-local[ver1] # install LocalStack cli and awslocal
-            docker pull localstack/localstack         # Make sure to pull the latest version of the image
+
 
       - name: Run / Initiate Aws Localstack
         run: |
+          docker pull localstack/localstack
           script_path="${GITHUB_WORKSPACE}/start.sh"
           chmod +x start.sh
           ./start.sh
