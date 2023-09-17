@@ -9,6 +9,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+          cache: 'maven'
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
         
 
       # Install Java 11.0.20.1
@@ -61,45 +68,46 @@ jobs:
         run: |
           sudo apt-get install awscli
 
-  # INSTALL AND CACHED MAVEN DEPENDENCIES
-      - name: Cache Maven Dependencies
-        id: cache-maven
-        uses: actions/cache@v2
-        with:
-          path: ~/cache/.m2/repository  # Path to Maven's local repository
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-m2-
 
-      - name: Check for Pom File Changes
-        id: check-pom-changes
-        run: |
-          git fetch origin ${{ github.ref }}
-          files=$(git diff --name-only origin/${{ github.ref }})
-          changed=false
-          for file in $files; do
-            if [[ $file == *"/pom.xml" ]]; then
-              changed=true
-              break
-            fi
-          done
-          if $changed; then
-            echo "Changes detected in pom.xml files."
-          else
-            echo "No changes detected in pom.xml files."
-            exit 0
-          fi
-        shell: bash
+  # # INSTALL AND CACHED MAVEN DEPENDENCIES
+  #     - name: Cache Maven Dependencies
+  #       id: cache-maven
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: ~/cache/.m2/repository  # Path to Maven's local repository
+  #         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-m2-
 
-      - name: Build and Test
-        run: |
-          if [ ${{ steps.check-pom-changes.outputs.exit-code }} -ne 0 ]; then
-            echo "Installing dependencies due to changes in pom.xml."
-            ./mvnw clean install -Dmaven.repo.local=~/cache/.m2/repository
-          else
-            echo "No changes detected in pom.xml. Using cached dependencies."
-          fi
-        if: steps.cache-maven.outputs.cache-hit != 'true'
+  #     - name: Check for Pom File Changes
+  #       id: check-pom-changes
+  #       run: |
+  #         git fetch origin ${{ github.ref }}
+  #         files=$(git diff --name-only origin/${{ github.ref }})
+  #         changed=false
+  #         for file in $files; do
+  #           if [[ $file == *"/pom.xml" ]]; then
+  #             changed=true
+  #             break
+  #           fi
+  #         done
+  #         if $changed; then
+  #           echo "Changes detected in pom.xml files."
+  #         else
+  #           echo "No changes detected in pom.xml files."
+  #           exit 0
+  #         fi
+  #       shell: bash
+
+  #     - name: Build and Test
+  #       run: |
+  #         if [ ${{ steps.check-pom-changes.outputs.exit-code }} -ne 0 ]; then
+  #           echo "Installing dependencies due to changes in pom.xml."
+  #           ./mvnw clean install -Dmaven.repo.local=~/cache/.m2/repository
+  #         else
+  #           echo "No changes detected in pom.xml. Using cached dependencies."
+  #         fi
+  #       if: steps.cache-maven.outputs.cache-hit != 'true'
 
 
 
