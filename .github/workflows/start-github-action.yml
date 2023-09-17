@@ -51,20 +51,12 @@ jobs:
 
 
 
-      # INSTALL AWS LOCAL STACK
-      - id: cached-aws-localstack
-        uses: actions/cache@v2
-        with:
-          path:  ~/.cache/docker
-          key: docker-${{ runner.os }}
-          
-      - name: Install and Run aws-localstack
+      # RUN AWS LOCAL STACK  
+      - name: Run aws-localstack
         run: |
-          pip install localstack awscli-local[ver1]
-          docker pull localstack/localstack
           script_path="${GITHUB_WORKSPACE}/start.sh"
-          chmod +x start.sh
-          ./start.sh
+          chmod +x "$script_path"
+          "$script_path"
 
       - name: test
         run: sudo docker ps
