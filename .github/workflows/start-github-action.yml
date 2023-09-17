@@ -10,6 +10,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Cache Maven Dependencies
+        id: cache-maven
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository  # Path to Maven's local repository
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-m2-
+
+      - name: mvn install
+        if: steps.cache-maven.outputs.cache-hit != 'true'
+        run: |
+          ./mvnw clean install -Dmaven.repo.local=~/.m2/repository
+        
 
       # Install Java 11.0.20.1
       - uses: actions/cache@v2
