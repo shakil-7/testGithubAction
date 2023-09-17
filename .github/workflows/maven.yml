@@ -7,8 +7,8 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Get Java Version
-        id: set-java-version
+      - name: Get Maven Version
+        id: set-maven-version
         run: |
           echo "MVN_VERSION=$(mvn -version 2>&1 | awk -F '"' '/version/ {print $2}')" >> $GITHUB_ENV
 
@@ -17,8 +17,9 @@ jobs:
         run: |
           sudo apt-get update -q
           sudo apt-get install -y maven
-          MAVEN_VERSION=$(mvn -version | grep 'Apache Maven' | awk '{print $3}')
-          echo "MAVEN_VERSION=$MAVEN_VERSION" >> $GITHUB_ENV
+          echo "MVN_VERSION=$(mvn -version 2>&1 | awk -F '"' '/version/ {print $2}')" >> $GITHUB_ENV
+          # MAVEN_VERSION=$(mvn -version | grep 'Apache Maven' | awk '{print $3}')
+          # echo "MAVEN_VERSION=$MAVEN_VERSION" >> $GITHUB_ENV
 
       - name: Set Cache Key
         id: set-cache-key
