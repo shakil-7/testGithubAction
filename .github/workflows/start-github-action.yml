@@ -10,6 +10,22 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+
+      # INSTALL JAVA
+      - name: Check if java-11 is already cached
+        uses: actions/cache@v2
+        id: cache-java
+        with:
+          path: ~/.cache/java-11
+          key: java-11
+    
+      - name: Install Java-11
+        if: steps.cache-java.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y openjdk-11-jdk
+
+
       - name: Check if maven is already cached
         uses: actions/cache@v2
         id: cache-maven
