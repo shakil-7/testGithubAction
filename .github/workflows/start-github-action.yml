@@ -9,20 +9,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: Cache Maven Dependencies
-        id: cache-maven
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository  # Path to Maven's local repository
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-m2-
-
-      - name: mvn install
-        if: steps.cache-maven.outputs.cache-hit != 'true'
-        run: |
-          ./mvnw clean install -Dmaven.repo.local=~/.m2/repository
         
 
       # Install Java 11.0.20.1
@@ -74,6 +60,52 @@ jobs:
         if: steps.cached-aws-cli.outputs.cache-hit != 'true'
         run: |
           sudo apt-get install awscli
+
+  # INSTALL AND CACHED MAVEN DEPENDENCIES
+      - name: Cache Maven Dependencies
+        id: cache-maven
+        uses: actions/cache@v2
+        with:
+          path: ~/cache/.m2/repository  # Path to Maven's local repository
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-m2-
+
+      - name: Check for Pom File Changes
+        id: check-pom-changes
+        run: |
+          if git diff --quiet HEAD~1..HEAD '**/pom.xml'; then
+            echo "No changes detected in pom.xml files."
+          else
+            echo "Changes detected in pom.xml files."
+            exit 1
+          fi
+        shell: bash
+
+      - name: Build and Test
+        run: |
+          if [ ${{ steps.check-pom-changes.outputs.exit-code }} -ne 0 ]; then
+            echo "Installing dependencies due to changes in pom.xml."
+            ./mvnw clean install -Dmaven.repo.local=~/cache/.m2/repository
+          else
+            echo "No changes detected in pom.xml. Using cached dependencies."
+          fi
+        if: steps.cache-maven.outputs.cache-hit != 'true'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
 
 
 
