@@ -38,7 +38,15 @@
             <version>4.13</version>
             <scope>test</scope>
         </dependency>
-    </dependencies>
+		<!-- https://mvnrepository.com/artifact/io.github.cdklabs/projen -->
+		<dependency>
+			<groupId>io.github.cdklabs</groupId>
+			<artifactId>projen</artifactId>
+			<version>0.73.22</version>
+		</dependency>
+
+
+	</dependencies>
 
 	<build>
 		<plugins>
