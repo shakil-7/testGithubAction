@@ -1,0 +1,34 @@
+on:
+  pull_request:
+    branches:
+      - feature/*
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Java Version
+        id: set-java-version
+        run: |
+          echo "JAVA_VERSION=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')" >> $GITHUB_ENV
+
+      - name: Install Maven
+        id: install-maven
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y maven
+          MAVEN_VERSION=$(mvn -version | grep 'Apache Maven' | awk '{print $3}')
+          echo "MAVEN_VERSION=$MAVEN_VERSION" >> $GITHUB_ENV
+
+      - name: Set Cache Key
+        id: set-cache-key
+        run: echo "::set-output name=cache_key::maven ${{ env.MAVEN_VERSION }}"
+
+      - name: Check if Maven is already cached
+        uses: actions/cache@v2
+        with:
+          path: ~/cache/maven ${{ env.MAVEN_VERSION }}
+          key: ${{ steps.set-cache-key.outputs.cache_key }}
+
+      - name: Checking Maven Version
+        run: mvn -version
