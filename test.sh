@@ -1,8 +1,11 @@
 cd test/
-
+sleep 1
 
 chmod +x run-project.sh
-./run-project.sh
+#chmod +x run-test.sh
 
-chmod +x run-test.sh
-./run-tes.sh
+
+./run-project.sh & ./run-test.sh
+
+
+
