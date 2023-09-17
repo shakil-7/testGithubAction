@@ -72,24 +72,24 @@ jobs:
             ${{ runner.os }}-m2-
 
       - name: Check for Pom File Changes
-      id: check-pom-changes
-      run: |
-        git fetch --depth=1 origin ${{ github.ref }}
-        files=$(git diff --name-only origin/${{ github.ref }})
-        changed=false
-        for file in $files; do
-          if [[ $file == *"/pom.xml" ]]; then
-            changed=true
-            break
+        id: check-pom-changes
+        run: |
+          git fetch --depth=1 origin ${{ github.ref }}
+          files=$(git diff --name-only origin/${{ github.ref }})
+          changed=false
+          for file in $files; do
+            if [[ $file == *"/pom.xml" ]]; then
+              changed=true
+              break
+            fi
+          done
+          if $changed; then
+            echo "Changes detected in pom.xml files."
+          else
+            echo "No changes detected in pom.xml files."
+            exit 0
           fi
-        done
-        if $changed; then
-          echo "Changes detected in pom.xml files."
-        else
-          echo "No changes detected in pom.xml files."
-          exit 0
-        fi
-      shell: bash
+        shell: bash
 
       - name: Build and Test
         run: |
