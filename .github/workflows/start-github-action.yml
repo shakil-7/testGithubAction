@@ -11,14 +11,14 @@ jobs:
       - uses: actions/checkout@v2
 
 
-      # INSTALL JAVA
+      # Install Java 11.0.20.1
       - uses: actions/cache@v2
         id: cached-java
         with:
           path: |
             ~/.cache/java-11
             ~/.cache/maven1
-          key: java 11.0.20.1
+          key: Java 11.0.20.1
     
       - name: Install Java-11
         if: steps.cached-java.outputs.cache-hit != 'true'
@@ -35,18 +35,9 @@ jobs:
             ~/.cache/java-11
             ~/.cache/maven1
           key: Apache Maven 3.6.3
-      - name: Install Maven
+      - name: Install Apache Maven 3.6.3
         if: steps.cache-maven.outputs.cache-hit != 'true'
         run: |
             sudo apt-get update -q
             sudo apt-get install -y maven
 
-        
-      # # Include another YAML file
-      # - name: Include sub-workflow
-      #   uses: actions/checkout@v2
-      #   with:
-      #     repository: ${{ github.repository }}
-      #     ref: main
-      #     path: |
-      #       .github/workflows/maven.yml
