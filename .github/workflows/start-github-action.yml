@@ -39,7 +39,6 @@ jobs:
 
 
       # INSTALL DOCKER
-      # install docker
       - id: cached-docker
         uses: actions/cache@v2
         with:
@@ -49,4 +48,29 @@ jobs:
       - name: Install Docker 20.10.21
         if: steps.cached-docker.outputs.cache-hit != 'true'
         uses: docker-practice/actions-setup-docker@master
+
+
+
+      # INSTALL AWS LOCAL STACK
+      - id: cached-aws-localstack
+        uses: actions/cache@v2
+        with:
+          path:  ~/.cache/docker
+          key: docker-${{ runner.os }}
+          
+      - name: Install AWS Localstack
+        if: steps.cached-aws-localstack.outputs.cache-hit != 'true'
+        run: |
+          script_path="${GITHUB_WORKSPACE}/start.sh"
+          chmod +x start.sh
+          ./start.sh
+          
+      - name: Run some Tests against LocalStack
+        run: |
+            awslocal s3 mb s3://test
+            awslocal s3 ls
+            echo "Test Execution complete!"  
+
+
+    
 
