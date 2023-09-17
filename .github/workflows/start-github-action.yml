@@ -60,6 +60,9 @@ jobs:
           
       - name: Install AWS Localstack
         if: steps.cached-aws-localstack.outputs.cache-hit != 'true'
+        uses: docker-practice/actions-setup-docker@master
+
+      - name: Run / Initiate Aws Localstack
         run: |
           script_path="${GITHUB_WORKSPACE}/start.sh"
           chmod +x start.sh
