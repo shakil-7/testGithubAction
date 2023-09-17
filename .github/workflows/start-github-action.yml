@@ -1,0 +1,84 @@
+
+name: Testing
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check if java-11 is already cached
+        uses: actions/cache@v2
+        id: cache-java
+        with:
+          path: ~/.cache/java-11
+          key: java-11
+    
+      - name: Install Java-11
+        if: steps.cache-java.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y openjdk-11-jdk
+
+      - name: Checking Java Version
+        run: java -version
+
+      - name: Check if maven is already cached
+        uses: actions/cache@v2
+        id: cache-maven
+        with:
+          path: ~/.cache/maven
+          key: maven
+    
+      - name: Install Maven
+        if: steps.cache-maven.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get install -y maven
+
+      - name: Checking Maven Version
+        run: mvn -version
+
+
+      # install docker
+      - name: Check if Docker is cached
+        id: cache-docker
+        uses: actions/cache@v2
+        with:
+          path:  ~/.cache/docker
+          key: docker-${{ runner.os }}
+  
+      - name: Install Docker
+        if: steps.cache-docker.outputs.cache-hit != 'true'
+        uses: docker-practice/actions-setup-docker@master
+  
+      - name: Checking Docker Version
+        run: sudo docker --version
+
+      # install aws localstack
+      - name: Check if aws localstack is cached
+        id: cache-aws-localstack
+        uses: actions/cache@v2
+        with:
+          path:  ~/.cache/aws-localstack
+          key: localstack
+
+      - name: Run an user define shell script
+        run: |
+          #!/bin/bash
+
+          clear
+          echo "starting docker for savings-dps"
+          docker-compose up -d
+          echo "waiting 5 seconds for docker to come online"
+          sleep 5
+
+      - name: test
+        run: sudo docker ps
+
+
+
+      - name: Check if localstack is running or not
+        run: docker ps
