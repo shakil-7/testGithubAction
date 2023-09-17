@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mkdir -p ~/.aws
 sudo touch ~/.aws/credentials
 sudo touch  ~/.aws/config
 
