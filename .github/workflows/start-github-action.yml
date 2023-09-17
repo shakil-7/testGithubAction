@@ -74,7 +74,7 @@ jobs:
       - name: Check for Pom File Changes
         id: check-pom-changes
         run: |
-          git fetch --depth=1 origin ${{ github.ref }}
+          git fetch origin ${{ github.ref }}
           files=$(git diff --name-only origin/${{ github.ref }})
           changed=false
           for file in $files; do
