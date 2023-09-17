@@ -1,5 +1,8 @@
 #!/bin/bash
 
+sudo touch ~/.aws/credentials
+sudo touch  ~/.aws/config
+
 aws configure set aws_access_key_id "fakeMyKeyId"
 aws configure set aws_secret_access_key "fakeMyKeyId"
 aws configure set default_region_name "ap-southeast-1"
