@@ -1,6 +1,6 @@
 port="9999"
 
-mvn test
+mvn test| tail -n 25
 
 pid=$(lsof -i :$port | grep "java" | awk '{print $2}' | grep '^[0-9]\+$')
 echo $pid
