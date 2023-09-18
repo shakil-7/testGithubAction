@@ -1,14 +1,14 @@
-name: start
+name: savingsTest
 
 on: push
 
 jobs:
-  start:
+  savignsTest:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
+      - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '11'
@@ -17,3 +17,15 @@ jobs:
         run: |
           java --version
           pwd
+          
+      - id: cached-docker
+        uses: actions/cache@v2
+        with:
+          path:  ~/.cache/Docker 20.10.21
+          key: Docker 20.10.21
+  
+      - name: Install Docker 20.10.21
+        if: steps.cached-docker.outputs.cache-hit != 'true'
+        uses: docker-practice/actions-setup-docker@master
+      - run: sudo docker --version
+      
