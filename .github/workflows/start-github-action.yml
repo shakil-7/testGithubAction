@@ -9,15 +9,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - id: restore-maven-cache
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v2
         with:
-          path: ~/.cache/setup-java-Linux-maven-${{ hashFiles('**/pom.xml') }}
+          path: ~/.cache
           key: setup-java-Linux-maven-${{ hashFiles('**/pom.xml') }}
           run: mvn -B package -DskipTests --file pom.xml
-
-      - uses: actions/cache/save@v3
+          
+      - if: steps.restore-maven-cache.outputs.cache-hit != 'true'
+        run: mvn -B package -DskipTests --file pom.xml
+        
+      - uses: actions/cache/save@v2
         with:
-          path: ~/.cache/setup-java-Linux-maven-${{ hashFiles('**/pom.xml') }}
+          path: ~/.cache
           key: ${{ steps.restore-maven-cache.outputs.cache-primary-key }}
 
         
