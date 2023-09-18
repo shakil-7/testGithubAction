@@ -28,6 +28,7 @@ jobs:
         if: steps.cached-docker.outputs.cache-hit != 'true'
         run: |
           curl -fsSL https://get.docker.com -o get-docker.sh
-          sudo sh ./get-docker.sh --dry-run
+          sed -i 's/sleep/# sleep/g' get-docker.sh
+          sudo sh ./get-docker.sh
           sudo docker --version
         
